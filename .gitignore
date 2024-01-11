@@ -1,0 +1,25 @@
+# Local .terraform and .terragrunt-cache  directories
+**/.terraform/**
+**/.terragrunt-cache/**
+**/.terragrunt-source-manifest/**
+
+# .tfstate files
+*.tfstate
+*.tfstate.*
+!init_state_bucket/*/*.tfstate
+
+# Crash log files
+crash.log
+
+# Ignore override files as they are usually used to override resources locally and so
+# are not checked in
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+*tfplan*
+
+# Ignore CLI configuration files
+.terraformrc
+terraform.rc

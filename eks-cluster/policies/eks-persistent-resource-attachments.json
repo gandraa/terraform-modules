@@ -1,0 +1,17 @@
+{
+    "Statement": [
+      {
+        "Action": [
+          "kms:CreateGrant"
+        ],
+        "Condition": {
+          "Bool": {
+            "kms:GrantIsForAWSResource": "true"
+          }
+        },
+        "Effect": "Allow",
+        "Resource": "${resources}"
+      }
+    ],
+    "Version": "2012-10-17"
+}

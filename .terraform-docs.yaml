@@ -1,0 +1,28 @@
+settings:
+  anchor: false
+  description: true
+  hide-empty: true
+content: |-
+  {{ .Header }}
+
+  {{ .Requirements }}
+
+  {{- if .Module.ModuleCalls }}
+    ## Modules
+
+    | Name | Source | Version |
+    |------|--------|---------|
+    {{- range .Module.ModuleCalls }}
+      {{- if .Version }}
+        | {{ anchorNameMarkdown "module" .Name }} | {{ .Source }} | {{ .Version | default "n/a" }} |
+      {{- else }}
+        | {{ anchorNameMarkdown "module" .Name }} | [{{ .Source }}]({{ .Source }}) | {{ .Version | default "n/a" }} |
+      {{- end }}
+    {{- end }}
+  {{- end }}
+
+  {{ .Resources }}
+
+  {{ .Inputs }}
+
+  {{ .Outputs }}

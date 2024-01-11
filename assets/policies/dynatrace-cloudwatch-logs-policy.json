@@ -1,0 +1,13 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "firehose:PutRecord",
+                "firehose:PutRecordBatch"
+            ],
+            "Resource": "${firehose_metric_streams_arn}"
+        }
+    ]
+}

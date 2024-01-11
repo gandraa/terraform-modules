@@ -1,0 +1,46 @@
+schemaVersion: '2.2'
+description: 'Installation of Rapid7 Agent on Linux instances.'
+parameters:
+  commands:
+    type: String
+    description: 'Installation of Rapid7 agent'
+    default: 'echo installing Rapid7 agent'
+mainSteps:
+- action: aws:runShellScript
+  name: runCommands
+  inputs:
+    timeoutSeconds: '60'
+    runCommand:
+    - 'SERVICE_STATUS=$(ps -ef | grep rapid7 | grep -v grep)'
+    - 'if [ -n "$SERVICE_STATUS" ];then'
+    - 'echo "The Rapid7 agent is already Running!"'
+    - 'else'
+    - 'if [ -h /etc/systemd/system/default.target.wants/ir_agent.service ];then'
+    - 'echo "The Rapid7 agent is already installed"'
+    - 'echo "Starting Rapid7 agent service..."'
+    - 'systemctl enable --now ir_agent.service'
+    - 'else'
+    - 'echo "Starting Rapid7 agent instalation"'
+    - 'echo "Disabling audit service."'
+    - 'sed -i "s/RefuseManualStop=yes/RefuseManualStop=no/g" /usr/lib/systemd/system/auditd.service'
+    - 'systemctl disable --now auditd.service'
+    - 'echo "Creating workdir to unpack install file Rapid7 agent."'
+    - 'mkdir -pv /opt/rapid7unpacked'
+    - 'echo "Downloading the Rapid7 agent binary file from S3 bucket."'
+    - 'if [ `uname -m` == "x86_64" ]; then'
+    - 'arch="x86_64"'
+    - 'elif [ `uname -m` == "aarch64" ]; then'
+    - 'arch="arm64"'
+    - 'fi'
+    - 'aws s3api get-object --bucket ${s3bucket} --key ${path_to_file} /opt/linux__Insight_Agent-latest.zip'  
+    - 'echo "Unpacking Rapid7 agent file."'
+    - 'unzip /opt/linux__Insight_Agent-latest.zip -d /opt/rapid7unpacked'
+    - 'echo "Giving execute permission to agent_installer-$arch.sh file."'
+    - 'chmod u+x /opt/rapid7unpacked/agent_installer-$arch.sh'
+    - 'aws_account_id=`aws sts get-caller-identity --query Account --output text`'
+    - '/opt/rapid7unpacked/agent_installer-$arch.sh install_start --token eu:67512fb1-4e97-4963-9a96-ebbc411c5762 --attributes "$aws_account_id,GRPIT_PRD_XborderPlus,${environment},${team_name}"'
+    - 'echo "Removing dir and files used for instalation."'
+    - 'rm -rfv /opt/rapid7unpacked'
+    - 'rm -fv /opt/linux__Insight_Agent-latest.zip'
+    - 'fi'
+    - 'fi'

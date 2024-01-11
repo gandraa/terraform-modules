@@ -1,0 +1,16 @@
+{
+    "Statement": [
+      {
+        "Action": [
+          "kms:Encrypt",
+          "kms:Decrypt",
+          "kms:ReEncrypt*",
+          "kms:GenerateDataKey*",
+          "kms:DescribeKey"
+        ],
+        "Effect": "Allow",
+        "Resource": "${resources}"
+      }
+    ],
+    "Version": "2012-10-17"
+  }

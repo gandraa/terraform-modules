@@ -1,0 +1,15 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "lambda:InvokeFunction",
+                "lambda:GetFunctionConfiguration"
+            ],
+            "Resource": [
+                "arn:aws:lambda:${aws_region}:${aws_account_id}:function:${aws_lambda_function_name}" 
+            ]
+        }
+    ]
+}
